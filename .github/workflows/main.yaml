@@ -1,0 +1,32 @@
+name: post-service-flow
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
+      - name: Build docker image
+        run: docker build -t aravsanj/opine-post-service .
+      - name: Publish image to docker hub
+        run: docker push aravsanj/opine-post-service:latest
+
+  deploy:
+    needs: build
+    runs-on: [self-hosted]
+    steps:
+      - name: Pull image from docker hub
+        run: docker pull aravsanj/opine-post-service:latest
+      - name: Delete old container
+        run: docker rm -f opine-post-service-container
+      - name: Run docker container
+        run: docker run -d -p 3001:3001 --name opine-post-service-container aravsanj/opine-post-service
+
