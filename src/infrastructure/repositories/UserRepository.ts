@@ -6,11 +6,11 @@ export class UserRepository implements IUserRepository {
   public async save(user: User): Promise<Error | void> {
     try {
       const userDocument = new UserModel({
+        userId: user.userId,
         name: user.name,
         email: user.email,
         username: user.username,
-        password: user.password,
-        userId: user.userId,
+        profile: user.profile,
       });
 
       await userDocument.save();
