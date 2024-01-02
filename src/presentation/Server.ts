@@ -22,6 +22,11 @@ export class Server {
 
     app.get('/', (req, res) => res.send('Post service is running'));
 
+    app.post('/verifyUser', (req, res) => {
+      console.log(req.body);
+      res.send('Post service is running');
+    });
+
     app.listen(port, () => {
       console.log(`Server is running in ${port}`);
     });

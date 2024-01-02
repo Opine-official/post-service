@@ -24,6 +24,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@opine-official/authentication": "^1.1.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "kafkajs": "^2.2.4",
