@@ -1,4 +1,5 @@
 {
+  "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
@@ -12,6 +13,6 @@
     "forceConsistentCasingInFileNames": true,
     "strictPropertyInitialization": false,
     "strictNullChecks": true,
-    "allowJs": false,
-  },
+    "allowJs": false
+  }
 }
