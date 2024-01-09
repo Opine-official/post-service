@@ -1,7 +1,11 @@
 import express from 'express';
 import cors from 'cors';
+import { VerifyUserController } from './controllers/VerifyUserController';
+import cookieParser from 'cookie-parser';
 
-// interface ServerControllers {}
+interface ServerControllers {
+  verifyUserController: VerifyUserController;
+}
 
 const corsOptions = {
   origin: 'https://localhost:3000',
@@ -12,9 +16,10 @@ const corsOptions = {
 export class Server {
   public static async run(
     port: number,
-    // controllers: ServerControllers,
+    controllers: ServerControllers,
   ): Promise<void> {
     const app = express();
+    app.use(cookieParser());
     app.use(cors(corsOptions));
     app.options('*', cors(corsOptions));
     app.use(express.json());
@@ -22,9 +27,8 @@ export class Server {
 
     app.get('/', (req, res) => res.send('Post service is running'));
 
-    app.post('/verifyUser', (req, res) => {
-      console.log(req.body);
-      res.send('Post service is running');
+    app.get('/verifyUser', (req, res) => {
+      controllers.verifyUserController.handle(req, res);
     });
 
     app.listen(port, () => {

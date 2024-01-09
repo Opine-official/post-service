@@ -1,4 +1,3 @@
-import { IUserRepository } from '../../domain/interfaces/IUserRepository';
 import { IUseCase } from '../../shared/interfaces/IUseCase';
 import { verifyToken } from '@opine-official/authentication';
 
@@ -7,7 +6,7 @@ interface IVerifyUserDTO {
 }
 
 export class VerifyUser implements IUseCase<IVerifyUserDTO, void> {
-  public constructor(private readonly _userRepo: IUserRepository) {}
+  public constructor() {}
 
   public async execute(input: IVerifyUserDTO): Promise<void | Error> {
     if (!input.token) {
