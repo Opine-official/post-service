@@ -15,14 +15,22 @@ interface ICreateNewPostDTO {
   tags: string[];
 }
 
-export class CreateNewPost implements IUseCase<ICreateNewPostDTO, void> {
+interface ICreateNewResultDTO {
+  slug: string;
+}
+
+export class CreateNewPost
+  implements IUseCase<ICreateNewPostDTO, ICreateNewResultDTO>
+{
   public constructor(
     private readonly _postRepo: IPostRepository,
     private readonly _userRepo: IUserRepository,
     private readonly _messageProducer: IMessageProducer,
   ) {}
 
-  public async execute(input: ICreateNewPostDTO): Promise<void | Error> {
+  public async execute(
+    input: ICreateNewPostDTO,
+  ): Promise<ICreateNewResultDTO | Error> {
     const mongoId = await this._userRepo.findMongoIdByUserId(input.userId);
 
     if (!mongoId) {
@@ -61,5 +69,9 @@ export class CreateNewPost implements IUseCase<ICreateNewPostDTO, void> {
     if (kafkaResult instanceof Error) {
       return kafkaResult;
     }
+
+    return {
+      slug: post.slug,
+    };
   }
 }

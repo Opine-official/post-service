@@ -20,6 +20,6 @@ export class CreateNewPostController implements IController {
       return;
     }
 
-    res.status(200).send('Token verified');
+    res.status(200).send({message: 'Posted successfully', slug: result.slug});
   }
 }
