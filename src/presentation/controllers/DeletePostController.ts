@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { IController } from '../../shared/interfaces/IController';
-import { GetPost } from '../../application/use-cases/GetPost';
+import { DeletePost } from '../../application/use-cases/DeletePost';
 
-export class GetPostController implements IController {
-  public constructor(private readonly _useCase: GetPost) {}
+export class DeletePostController implements IController {
+  public constructor(private readonly _useCase: DeletePost) {}
 
   public async handle(req: Request, res: Response): Promise<void> {
     const slug = req.query.slug;
@@ -21,6 +21,6 @@ export class GetPostController implements IController {
       return;
     }
 
-    res.status(200).json(result);
+    res.status(200).json({ message: 'Post deleted successfully' });
   }
 }

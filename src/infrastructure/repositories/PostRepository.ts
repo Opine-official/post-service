@@ -2,6 +2,7 @@ import { IPostRepository } from '../../domain/interfaces/IPostRepository';
 import { Post } from '../../domain/entities/Post';
 import PostModel from '../models/PostModel';
 import IFullPost from '../../shared/interfaces/IFullPost';
+import { IPostUpdatePayload } from '../../shared/interfaces/IPostUpdatePayload';
 
 export class PostRepository implements IPostRepository {
   public async save(post: Post): Promise<Error | void> {
@@ -25,6 +26,39 @@ export class PostRepository implements IPostRepository {
     }
   }
 
+  public async update(post: IPostUpdatePayload): Promise<Error | void> {
+    try {
+      await PostModel.updateOne(
+        { slug: post.slug },
+        {
+          title: post.title,
+          description: post.description,
+          content: post.content,
+          tags: post.tags,
+        },
+      );
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return new Error(error.message);
+      }
+      return new Error('Something went wrong while updating');
+    }
+  }
+
+  public async delete(slug: string): Promise<void | Error> {
+    try {
+      await PostModel.deleteOne({
+        slug: slug,
+      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return new Error(error.message);
+      }
+
+      return new Error('Something went wrong while deleting');
+    }
+  }
+
   public async getPost(slug: string): Promise<IFullPost | Error> {
     try {
       const postDocument = await PostModel.findOne({ slug: slug }).populate(
@@ -43,6 +77,8 @@ export class PostRepository implements IPostRepository {
             profile: string;
           },
           tags: postDocument.tags,
+          createdAt: postDocument.createdAt,
+          updatedAt: postDocument.updatedAt,
         };
       } else {
         return new Error('Post not found');

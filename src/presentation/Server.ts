@@ -5,11 +5,15 @@ import cookieParser from 'cookie-parser';
 import { CreateNewPostController } from './controllers/CreateNewPostController';
 import { authenticateToken } from '@opine-official/authentication';
 import { GetPostController } from './controllers/GetPostController';
+import { UpdatePostController } from './controllers/UpdatePostController';
+import { DeletePostController } from './controllers/DeletePostController';
 
 interface ServerControllers {
   verifyUserController: VerifyUserController;
   createNewPostController: CreateNewPostController;
   getPostController: GetPostController;
+  updatePostController: UpdatePostController;
+  deletePostController: DeletePostController;
 }
 
 const corsOptions = {
@@ -48,10 +52,10 @@ export class Server {
         controllers.createNewPostController.handle(req, res);
       })
       .put('/', (req, res) => {
-        console.log(req, res);
+        controllers.updatePostController.handle(req, res);
       })
       .delete('/', (req, res) => {
-        console.log(req, res);
+        controllers.deletePostController.handle(req, res);
       });
 
     app.listen(port, () => {
