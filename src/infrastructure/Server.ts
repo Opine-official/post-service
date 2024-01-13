@@ -51,10 +51,10 @@ export class Server {
       .post('/', authenticateToken, (req, res) => {
         controllers.createNewPostController.handle(req, res);
       })
-      .put('/', (req, res) => {
+      .put('/', authenticateToken, (req, res) => {
         controllers.updatePostController.handle(req, res);
       })
-      .delete('/', (req, res) => {
+      .delete('/', authenticateToken, (req, res) => {
         controllers.deletePostController.handle(req, res);
       });
 
