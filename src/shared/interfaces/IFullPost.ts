@@ -12,6 +12,8 @@ interface IFullPost {
     profile: string;
   };
   tags: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export default IFullPost;
