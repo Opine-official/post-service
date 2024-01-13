@@ -7,7 +7,7 @@ import { KafkaMessageProducer } from './src/infrastructure/brokers/kafka/KafkaMe
 import { DatabaseConnection } from './src/infrastructure/database/Connection';
 import { PostRepository } from './src/infrastructure/repositories/PostRepository';
 import { UserRepository } from './src/infrastructure/repositories/UserRepository';
-import { Server } from './src/presentation/Server';
+import { Server } from './src/infrastructure/Server';
 import run from './src/presentation/consumers/PostConsumer';
 import { CreateNewPostController } from './src/presentation/controllers/CreateNewPostController';
 import { DeletePostController } from './src/presentation/controllers/DeletePostController';

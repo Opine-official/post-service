@@ -1,12 +1,12 @@
 import express from 'express';
 import cors from 'cors';
-import { VerifyUserController } from './controllers/VerifyUserController';
+import { VerifyUserController } from '../presentation/controllers/VerifyUserController';
 import cookieParser from 'cookie-parser';
-import { CreateNewPostController } from './controllers/CreateNewPostController';
+import { CreateNewPostController } from '../presentation/controllers/CreateNewPostController';
 import { authenticateToken } from '@opine-official/authentication';
-import { GetPostController } from './controllers/GetPostController';
-import { UpdatePostController } from './controllers/UpdatePostController';
-import { DeletePostController } from './controllers/DeletePostController';
+import { GetPostController } from '../presentation/controllers/GetPostController';
+import { UpdatePostController } from '../presentation/controllers/UpdatePostController';
+import { DeletePostController } from '../presentation/controllers/DeletePostController';
 
 interface ServerControllers {
   verifyUserController: VerifyUserController;
