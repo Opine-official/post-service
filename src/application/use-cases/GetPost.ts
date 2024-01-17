@@ -29,6 +29,8 @@ export class GetPost implements IUseCase<IGetPostDTO, GetPostResults> {
       content: postResult.content,
       user: postResult.user,
       tags: postResult.tags,
+      slug: postResult.slug,
+      isDraft: postResult.isDraft,
       createdAt: postResult.createdAt,
       updatedAt: postResult.updatedAt,
     };

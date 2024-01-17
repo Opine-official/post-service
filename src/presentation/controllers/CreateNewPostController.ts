@@ -12,6 +12,8 @@ export class CreateNewPostController implements IController {
       description: req.body.description,
       content: req.body.content,
       tags: req.body.tags,
+      isDraft: req.body.isDraft,
+      isThreadsEnabled: req.body.isThreadsEnabled,
     });
 
     if (result instanceof Error) {
@@ -20,6 +22,6 @@ export class CreateNewPostController implements IController {
       return;
     }
 
-    res.status(200).send({message: 'Posted successfully', slug: result.slug});
+    res.status(200).send({ message: 'Posted successfully', slug: result.slug });
   }
 }

@@ -13,6 +13,8 @@ interface IUpdatePostDTO {
   content: Content;
   user?: string;
   tags: string[];
+  isDraft: boolean;
+  isThreadsEnabled: boolean;
 }
 
 interface IUpdatePostResultDTO {
@@ -36,6 +38,8 @@ export class UpdatePost
       content: input.content,
       tags: input.tags,
       slug: input.slug,
+      isDraft: input.isDraft,
+      isThreadsEnabled: input.isThreadsEnabled,
     });
 
     if (updatedPost instanceof Error) {
@@ -48,6 +52,8 @@ export class UpdatePost
       user: input.userId,
       tags: input.tags,
       slug: input.slug,
+      isDraft: input.isDraft,
+      isThreadsEnabled: input.isThreadsEnabled,
     };
     const kafkaResult = await this._messageProducer.sendToTopic(
       'post_updated',

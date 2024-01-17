@@ -10,6 +10,8 @@ type PostParams = {
   user: string;
   tags: string[];
   slug?: string;
+  isDraft: boolean;
+  isThreadsEnabled: boolean;
 };
 
 export class Post {
@@ -20,6 +22,8 @@ export class Post {
   user: string;
   tags: string[];
   slug: string;
+  isDraft: boolean;
+  isThreadsEnabled: boolean;
 
   constructor(params: PostParams) {
     this.postId = params.postId || randomUUID();
@@ -29,5 +33,7 @@ export class Post {
     this.user = params.user;
     this.tags = params.tags;
     this.slug = generateSlug(this.title, this.postId);
+    this.isDraft = params.isDraft;
+    this.isThreadsEnabled = params.isThreadsEnabled;
   }
 }

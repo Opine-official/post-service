@@ -21,6 +21,8 @@ export class UpdatePostController implements IController {
       description: req.body.description,
       content: req.body.content,
       tags: req.body.tags,
+      isDraft: req.body.isDraft,
+      isThreadsEnabled: req.body.isThreadsEnabled,
     });
 
     if (result instanceof Error) {

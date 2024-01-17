@@ -15,6 +15,15 @@ const PostSchema = new Schema(
       type: String,
       required: true,
     },
+    isDraft: {
+      type: Boolean,
+      required: true,
+    },
+    isThreadsEnabled: {
+      type: Boolean,
+      default: true,
+      required: true,
+    },
   },
   { timestamps: true },
 );

@@ -15,6 +15,8 @@ export class PostRepository implements IPostRepository {
         user: post.user,
         tags: post.tags,
         slug: post.slug,
+        isDraft: post.isDraft,
+        isThreadsEnabled: post.isThreadsEnabled,
       });
 
       await postDocument.save();
@@ -35,6 +37,8 @@ export class PostRepository implements IPostRepository {
           description: post.description,
           content: post.content,
           tags: post.tags,
+          isDraft: post.isDraft,
+          isThreadsEnabled: post.isThreadsEnabled,
         },
       );
     } catch (error: unknown) {
@@ -77,6 +81,8 @@ export class PostRepository implements IPostRepository {
             profile: string;
           },
           tags: postDocument.tags,
+          slug: postDocument.slug,
+          isDraft: postDocument.isDraft,
           createdAt: postDocument.createdAt,
           updatedAt: postDocument.updatedAt,
         };

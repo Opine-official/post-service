@@ -13,6 +13,9 @@ interface ICreateNewPostDTO {
   content: Content;
   user?: string;
   tags: string[];
+  slug?: string;
+  isDraft: boolean;
+  isThreadsEnabled: boolean;
 }
 
 interface ICreateNewResultDTO {
@@ -43,6 +46,8 @@ export class CreateNewPost
       content: input.content,
       user: mongoId,
       tags: input.tags,
+      isDraft: input.isDraft,
+      isThreadsEnabled: input.isThreadsEnabled,
     });
 
     const saveResult = await this._postRepo.save(post);
@@ -58,6 +63,8 @@ export class CreateNewPost
       user: input.userId,
       tags: input.tags,
       slug: post.slug,
+      isDraft: input.isDraft,
+      isThreadsEnabled: input.isThreadsEnabled,
     };
 
     const kafkaResult = await this._messageProducer.sendToTopic(

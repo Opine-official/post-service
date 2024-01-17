@@ -6,4 +6,6 @@ export interface IPostUpdatePayload {
   content: Content;
   tags: string[];
   slug: string;
+  isDraft: boolean;
+  isThreadsEnabled: boolean;
 }

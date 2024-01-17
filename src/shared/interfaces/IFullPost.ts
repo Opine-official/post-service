@@ -12,6 +12,8 @@ interface IFullPost {
     profile: string;
   };
   tags: string[];
+  slug: string;
+  isDraft: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
