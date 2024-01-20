@@ -54,16 +54,16 @@ export class UpdatePost
       slug: input.slug,
       isDraft: input.isDraft,
       isThreadsEnabled: input.isThreadsEnabled,
+      createdAt: updatedPost.createdAt,
     };
     const kafkaResult = await this._messageProducer.sendToTopic(
-      'post_updated',
+      'post_update-topic',
       'post-topic-1',
       JSON.stringify(feedPost),
     );
 
     if (kafkaResult instanceof Error) {
-      console.error(kafkaResult); // temporarily consoling on use-case
-      // return kafkaResult;
+      return kafkaResult;
     }
 
     return { slug: input.slug };

@@ -7,6 +7,7 @@ interface IFeedPost {
   slug: string;
   isDraft: boolean;
   isThreadsEnabled: boolean;
+  createdAt: NativeDate;
 }
 
 export default IFeedPost;

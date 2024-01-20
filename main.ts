@@ -1,6 +1,7 @@
 import { CreateNewPost } from './src/application/use-cases/CreateNewPost';
 import { DeletePost } from './src/application/use-cases/DeletePost';
 import { GetPost } from './src/application/use-cases/GetPost';
+import { GetPostsByUser } from './src/application/use-cases/GetPostsByUser';
 import { UpdatePost } from './src/application/use-cases/UpdatePost';
 import { VerifyUser } from './src/application/use-cases/VerifyUser';
 import { KafkaMessageProducer } from './src/infrastructure/brokers/kafka/KafkaMessageProducer';
@@ -12,6 +13,7 @@ import run from './src/presentation/consumers/PostConsumer';
 import { CreateNewPostController } from './src/presentation/controllers/CreateNewPostController';
 import { DeletePostController } from './src/presentation/controllers/DeletePostController';
 import { GetPostController } from './src/presentation/controllers/GetPostController';
+import { GetPostsByUserController } from './src/presentation/controllers/GetPostsByUserController';
 import { UpdatePostController } from './src/presentation/controllers/UpdatePostController';
 import { VerifyUserController } from './src/presentation/controllers/VerifyUserController';
 
@@ -27,12 +29,14 @@ export async function main(): Promise<void> {
   const getPost = new GetPost(postRepo);
   const updatePost = new UpdatePost(postRepo, messageProducer);
   const deletePost = new DeletePost(postRepo, messageProducer);
+  const getPostsByUser = new GetPostsByUser(userRepo, postRepo);
 
   const createNewPostController = new CreateNewPostController(createNewPost);
   const verifyUserController = new VerifyUserController(verifyUser);
   const getPostController = new GetPostController(getPost);
   const updatePostController = new UpdatePostController(updatePost);
   const deletePostController = new DeletePostController(deletePost);
+  const getPostsByUserController = new GetPostsByUserController(getPostsByUser);
 
   run();
 
@@ -42,6 +46,7 @@ export async function main(): Promise<void> {
     getPostController,
     updatePostController,
     deletePostController,
+    getPostsByUserController,
   });
 }
 

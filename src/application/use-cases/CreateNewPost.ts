@@ -65,6 +65,7 @@ export class CreateNewPost
       slug: post.slug,
       isDraft: input.isDraft,
       isThreadsEnabled: input.isThreadsEnabled,
+      createdAt: saveResult.createdAt,
     };
 
     const kafkaResult = await this._messageProducer.sendToTopic(

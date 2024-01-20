@@ -7,6 +7,7 @@ import { authenticateToken } from '@opine-official/authentication';
 import { GetPostController } from '../presentation/controllers/GetPostController';
 import { UpdatePostController } from '../presentation/controllers/UpdatePostController';
 import { DeletePostController } from '../presentation/controllers/DeletePostController';
+import { GetPostsByUserController } from '../presentation/controllers/GetPostsByUserController';
 
 interface ServerControllers {
   verifyUserController: VerifyUserController;
@@ -14,6 +15,7 @@ interface ServerControllers {
   getPostController: GetPostController;
   updatePostController: UpdatePostController;
   deletePostController: DeletePostController;
+  getPostsByUserController: GetPostsByUserController;
 }
 
 const corsOptions = {
@@ -57,6 +59,10 @@ export class Server {
       .delete('/', authenticateToken, (req, res) => {
         controllers.deletePostController.handle(req, res);
       });
+
+    app.get('/getPostsByUser', (req, res) => {
+      controllers.getPostsByUserController.handle(req, res);
+    });
 
     app.listen(port, () => {
       console.log(`Server is running in ${port}`);
