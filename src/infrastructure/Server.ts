@@ -60,7 +60,7 @@ export class Server {
         controllers.deletePostController.handle(req, res);
       });
 
-    app.get('/getPostsByUser', (req, res) => {
+    app.get('/getPostsByUser', authenticateToken, (req, res) => {
       controllers.getPostsByUserController.handle(req, res);
     });
 
