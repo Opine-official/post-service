@@ -8,6 +8,7 @@ import { GetPostController } from '../presentation/controllers/GetPostController
 import { UpdatePostController } from '../presentation/controllers/UpdatePostController';
 import { DeletePostController } from '../presentation/controllers/DeletePostController';
 import { GetPostsByUserController } from '../presentation/controllers/GetPostsByUserController';
+import { GetPostsByUsernameController } from '../presentation/controllers/GetPostsByUsernameController';
 
 interface ServerControllers {
   verifyUserController: VerifyUserController;
@@ -16,6 +17,7 @@ interface ServerControllers {
   updatePostController: UpdatePostController;
   deletePostController: DeletePostController;
   getPostsByUserController: GetPostsByUserController;
+  getPostsByUsernameController: GetPostsByUsernameController;
 }
 
 const corsOptions = {
@@ -62,6 +64,10 @@ export class Server {
 
     app.get('/getPostsByUser', authenticateToken, (req, res) => {
       controllers.getPostsByUserController.handle(req, res);
+    });
+
+    app.get('/getPostsByUsername', (req, res) => {
+      controllers.getPostsByUsernameController.handle(req, res);
     });
 
     app.listen(port, () => {

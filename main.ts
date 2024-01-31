@@ -2,6 +2,7 @@ import { CreateNewPost } from './src/application/use-cases/CreateNewPost';
 import { DeletePost } from './src/application/use-cases/DeletePost';
 import { GetPost } from './src/application/use-cases/GetPost';
 import { GetPostsByUser } from './src/application/use-cases/GetPostsByUser';
+import { GetPostsByUsername } from './src/application/use-cases/GetPostsByUsername';
 import { UpdatePost } from './src/application/use-cases/UpdatePost';
 import { VerifyUser } from './src/application/use-cases/VerifyUser';
 import { KafkaMessageProducer } from './src/infrastructure/brokers/kafka/KafkaMessageProducer';
@@ -14,6 +15,7 @@ import { CreateNewPostController } from './src/presentation/controllers/CreateNe
 import { DeletePostController } from './src/presentation/controllers/DeletePostController';
 import { GetPostController } from './src/presentation/controllers/GetPostController';
 import { GetPostsByUserController } from './src/presentation/controllers/GetPostsByUserController';
+import { GetPostsByUsernameController } from './src/presentation/controllers/GetPostsByUsernameController';
 import { UpdatePostController } from './src/presentation/controllers/UpdatePostController';
 import { VerifyUserController } from './src/presentation/controllers/VerifyUserController';
 
@@ -30,6 +32,7 @@ export async function main(): Promise<void> {
   const updatePost = new UpdatePost(postRepo, messageProducer);
   const deletePost = new DeletePost(postRepo, messageProducer);
   const getPostsByUser = new GetPostsByUser(userRepo, postRepo);
+  const getPostsByUsername = new GetPostsByUsername(userRepo, postRepo);
 
   const createNewPostController = new CreateNewPostController(createNewPost);
   const verifyUserController = new VerifyUserController(verifyUser);
@@ -37,6 +40,9 @@ export async function main(): Promise<void> {
   const updatePostController = new UpdatePostController(updatePost);
   const deletePostController = new DeletePostController(deletePost);
   const getPostsByUserController = new GetPostsByUserController(getPostsByUser);
+  const getPostsByUsernameController = new GetPostsByUsernameController(
+    getPostsByUsername,
+  );
 
   run();
 
@@ -47,6 +53,7 @@ export async function main(): Promise<void> {
     updatePostController,
     deletePostController,
     getPostsByUserController,
+    getPostsByUsernameController,
   });
 }
 
