@@ -9,7 +9,7 @@ import { UpdatePostController } from '../presentation/controllers/UpdatePostCont
 import { DeletePostController } from '../presentation/controllers/DeletePostController';
 import { GetPostsByUserController } from '../presentation/controllers/GetPostsByUserController';
 import { GetPostsByUsernameController } from '../presentation/controllers/GetPostsByUsernameController';
-
+import helmet from 'helmet';
 interface ServerControllers {
   verifyUserController: VerifyUserController;
   createNewPostController: CreateNewPostController;
@@ -37,6 +37,7 @@ export class Server {
     app.options('*', cors(corsOptions));
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
+    app.use(helmet());
 
     app.get('/test', (req, res) => res.send('Post service is running'));
 
