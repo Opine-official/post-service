@@ -5,6 +5,7 @@ import IFullPost from '../../shared/interfaces/IFullPost';
 import { IPostUpdatePayload } from '../../shared/interfaces/IPostUpdatePayload';
 import { ICreatePostResult } from '../../shared/interfaces/ICreatePostResult';
 import { IUpdatePostResult } from '../../shared/interfaces/IUpdatePostResult';
+import mongoose from 'mongoose';
 
 export class PostRepository implements IPostRepository {
   public async save(post: Post): Promise<Error | ICreatePostResult> {
@@ -71,11 +72,14 @@ export class PostRepository implements IPostRepository {
     }
   }
 
-  public async delete(slug: string): Promise<void | Error> {
+  public async delete(
+    slug: string,
+    session: mongoose.ClientSession,
+  ): Promise<void | Error> {
     try {
       await PostModel.deleteOne({
         slug: slug,
-      });
+      }).session(session);
     } catch (error: unknown) {
       if (error instanceof Error) {
         return new Error(error.message);

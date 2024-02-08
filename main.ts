@@ -7,6 +7,7 @@ import { UpdatePost } from './src/application/use-cases/UpdatePost';
 import { VerifyUser } from './src/application/use-cases/VerifyUser';
 import { KafkaMessageProducer } from './src/infrastructure/brokers/kafka/KafkaMessageProducer';
 import { DatabaseConnection } from './src/infrastructure/database/Connection';
+import { MongooseDatabaseSession } from './src/infrastructure/database/MongooseDatabaseSession';
 import { PostRepository } from './src/infrastructure/repositories/PostRepository';
 import { UserRepository } from './src/infrastructure/repositories/UserRepository';
 import { Server } from './src/infrastructure/Server';
@@ -25,12 +26,13 @@ export async function main(): Promise<void> {
   const userRepo = new UserRepository();
   const postRepo = new PostRepository();
   const messageProducer = new KafkaMessageProducer();
+  const databaseSession = new MongooseDatabaseSession();
 
   const verifyUser = new VerifyUser();
   const createNewPost = new CreateNewPost(postRepo, userRepo, messageProducer);
   const getPost = new GetPost(postRepo);
   const updatePost = new UpdatePost(postRepo, messageProducer);
-  const deletePost = new DeletePost(postRepo, messageProducer);
+  const deletePost = new DeletePost(postRepo, messageProducer, databaseSession);
   const getPostsByUser = new GetPostsByUser(userRepo, postRepo);
   const getPostsByUsername = new GetPostsByUsername(userRepo, postRepo);
 
