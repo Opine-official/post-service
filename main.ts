@@ -5,6 +5,7 @@ import { GetPostsByUser } from './src/application/use-cases/GetPostsByUser';
 import { GetPostsByUsername } from './src/application/use-cases/GetPostsByUsername';
 import { UpdatePost } from './src/application/use-cases/UpdatePost';
 import { VerifyUser } from './src/application/use-cases/VerifyUser';
+import { KafkaAcknowledgement } from './src/infrastructure/brokers/kafka/KafkaAcknowledgement';
 import { KafkaMessageProducer } from './src/infrastructure/brokers/kafka/KafkaMessageProducer';
 import { DatabaseConnection } from './src/infrastructure/database/Connection';
 import { MongooseDatabaseSession } from './src/infrastructure/database/MongooseDatabaseSession';
@@ -27,12 +28,18 @@ export async function main(): Promise<void> {
   const postRepo = new PostRepository();
   const messageProducer = new KafkaMessageProducer();
   const databaseSession = new MongooseDatabaseSession();
+  const messageAcknowledgement = new KafkaAcknowledgement();
 
   const verifyUser = new VerifyUser();
   const createNewPost = new CreateNewPost(postRepo, userRepo, messageProducer);
   const getPost = new GetPost(postRepo);
   const updatePost = new UpdatePost(postRepo, messageProducer);
-  const deletePost = new DeletePost(postRepo, messageProducer, databaseSession);
+  const deletePost = new DeletePost(
+    postRepo,
+    messageProducer,
+    databaseSession,
+    messageAcknowledgement,
+  );
   const getPostsByUser = new GetPostsByUser(userRepo, postRepo);
   const getPostsByUsername = new GetPostsByUsername(userRepo, postRepo);
 
