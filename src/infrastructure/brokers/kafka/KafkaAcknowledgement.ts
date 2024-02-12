@@ -12,35 +12,41 @@ export class KafkaAcknowledgement implements IKafkaAcknowledgement {
     topic: string,
     // session: any
   ): Promise<Error | void> {
-    await this.consumer.connect();
+    try {
+      await this.consumer.connect();
 
-    await this.consumer.subscribe({ topic: topic });
+      await this.consumer.subscribe({ topic: topic });
 
-    await this.consumer.run({
-      eachMessage: async ({ topic, partition, message }) => {
-        console.log({
-          topic: topic,
-          partition: partition,
-          value: message?.value?.toString(),
-        });
+      await this.consumer.run({
+        eachMessage: async ({ topic, partition, message }) => {
+          console.log({
+            topic: topic,
+            partition: partition,
+            value: message?.value?.toString(),
+          });
 
-        if (!message?.value?.toString()) {
-          // await session.commitTransaction();
+          if (!message?.value?.toString()) {
+            // await session.commitTransaction();
+            // await session.endSession();
+            await this.consumer.disconnect();
+
+            return;
+          }
+
+          const value = JSON.parse(message?.value?.toString());
+
+          if (value.success) {
+            // await session.commitTransaction();
+          } else {
+            // await session.abortTransaction();
+          }
+
           // await session.endSession();
-
-          return;
-        }
-
-        const value = JSON.parse(message?.value?.toString());
-
-        if (value.success) {
-          // await session.commitTransaction();
-        } else {
-          // await session.abortTransaction();
-        }
-
-        // await session.endSession();
-      },
-    });
+          await this.consumer.disconnect();
+        },
+      });
+    } catch (e: unknown) {
+      console.error(e);
+    }
   }
 }
