@@ -126,9 +126,9 @@ export class PostRepository implements IPostRepository {
 
   public async getPostsByUser(user: string): Promise<Error | IFullPost[]> {
     try {
-      const postDocuments = await PostModel.find({ user: user }).populate(
-        'user',
-      );
+      const postDocuments = await PostModel.find({ user: user })
+        .sort({ createdAt: -1 })
+        .populate('user');
       const posts: IFullPost[] = [];
 
       postDocuments.forEach((postDocument) => {
