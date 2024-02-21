@@ -10,6 +10,7 @@ import { DeletePostController } from '../presentation/controllers/DeletePostCont
 import { GetPostsByUserController } from '../presentation/controllers/GetPostsByUserController';
 import { GetPostsByUsernameController } from '../presentation/controllers/GetPostsByUsernameController';
 import helmet from 'helmet';
+import { SavePostReportController } from '../presentation/controllers/SavePostReportController';
 interface ServerControllers {
   verifyUserController: VerifyUserController;
   createNewPostController: CreateNewPostController;
@@ -18,6 +19,7 @@ interface ServerControllers {
   deletePostController: DeletePostController;
   getPostsByUserController: GetPostsByUserController;
   getPostsByUsernameController: GetPostsByUsernameController;
+  savePostReportController: SavePostReportController;
 }
 
 const corsOptions = {
@@ -47,6 +49,10 @@ export class Server {
 
     app.post('/getPost', (req, res) => {
       controllers.getPostController.handle(req, res);
+    });
+
+    app.post('/report', (req, res) => {
+      controllers.savePostReportController.handle(req, res);
     });
 
     app

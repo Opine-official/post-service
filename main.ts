@@ -3,12 +3,14 @@ import { DeletePost } from './src/application/use-cases/DeletePost';
 import { GetPost } from './src/application/use-cases/GetPost';
 import { GetPostsByUser } from './src/application/use-cases/GetPostsByUser';
 import { GetPostsByUsername } from './src/application/use-cases/GetPostsByUsername';
+import { SavePostReport } from './src/application/use-cases/SavePostReport';
 import { UpdatePost } from './src/application/use-cases/UpdatePost';
 import { VerifyUser } from './src/application/use-cases/VerifyUser';
 import { KafkaAcknowledgement } from './src/infrastructure/brokers/kafka/KafkaAcknowledgement';
 import { KafkaMessageProducer } from './src/infrastructure/brokers/kafka/KafkaMessageProducer';
 import { DatabaseConnection } from './src/infrastructure/database/Connection';
 import { MongooseDatabaseSession } from './src/infrastructure/database/MongooseDatabaseSession';
+import { PostReportRepository } from './src/infrastructure/repositories/PostReportRepository';
 import { PostRepository } from './src/infrastructure/repositories/PostRepository';
 import { UserRepository } from './src/infrastructure/repositories/UserRepository';
 import { Server } from './src/infrastructure/Server';
@@ -18,6 +20,7 @@ import { DeletePostController } from './src/presentation/controllers/DeletePostC
 import { GetPostController } from './src/presentation/controllers/GetPostController';
 import { GetPostsByUserController } from './src/presentation/controllers/GetPostsByUserController';
 import { GetPostsByUsernameController } from './src/presentation/controllers/GetPostsByUsernameController';
+import { SavePostReportController } from './src/presentation/controllers/SavePostReportController';
 import { UpdatePostController } from './src/presentation/controllers/UpdatePostController';
 import { VerifyUserController } from './src/presentation/controllers/VerifyUserController';
 
@@ -26,6 +29,7 @@ export async function main(): Promise<void> {
 
   const userRepo = new UserRepository();
   const postRepo = new PostRepository();
+  const postReportRepo = new PostReportRepository();
   const messageProducer = new KafkaMessageProducer();
   const databaseSession = new MongooseDatabaseSession();
   const messageAcknowledgement = new KafkaAcknowledgement();
@@ -42,6 +46,7 @@ export async function main(): Promise<void> {
   );
   const getPostsByUser = new GetPostsByUser(userRepo, postRepo);
   const getPostsByUsername = new GetPostsByUsername(userRepo, postRepo);
+  const savePostReport = new SavePostReport(postReportRepo, postRepo, userRepo);
 
   const createNewPostController = new CreateNewPostController(createNewPost);
   const verifyUserController = new VerifyUserController(verifyUser);
@@ -52,6 +57,7 @@ export async function main(): Promise<void> {
   const getPostsByUsernameController = new GetPostsByUsernameController(
     getPostsByUsername,
   );
+  const savePostReportController = new SavePostReportController(savePostReport);
 
   run();
 
@@ -63,6 +69,7 @@ export async function main(): Promise<void> {
     deletePostController,
     getPostsByUserController,
     getPostsByUsernameController,
+    savePostReportController,
   });
 }
 

@@ -159,4 +159,23 @@ export class PostRepository implements IPostRepository {
       return new Error('Something went wrong while fetching the posts');
     }
   }
+
+  public async getMongoIdFromPostId(postId: string): Promise<string | Error> {
+    try {
+      const postDocument = await PostModel.findOne({
+        postId: postId,
+      });
+
+      if (!postDocument) {
+        throw new Error('Post not found');
+      }
+
+      return postDocument?._id.toString();
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return new Error(error.message);
+      }
+      return new Error('Something went wrong while fetching the post');
+    }
+  }
 }

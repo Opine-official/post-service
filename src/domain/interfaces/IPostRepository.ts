@@ -14,4 +14,5 @@ export interface IPostRepository {
   ): Promise<void | Error>;
   getPost(slug: string): Promise<IFullPost | Error>;
   getPostsByUser(userId: string): Promise<IFullPost[] | Error>;
+  getMongoIdFromPostId(postId: string): Promise<string | Error>;
 }
