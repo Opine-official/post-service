@@ -3,6 +3,7 @@ import { DeletePost } from './src/application/use-cases/DeletePost';
 import { GetPost } from './src/application/use-cases/GetPost';
 import { GetPostsByUser } from './src/application/use-cases/GetPostsByUser';
 import { GetPostsByUsername } from './src/application/use-cases/GetPostsByUsername';
+import { GetReportedPosts } from './src/application/use-cases/GetReportedPosts';
 import { SavePostReport } from './src/application/use-cases/SavePostReport';
 import { UpdatePost } from './src/application/use-cases/UpdatePost';
 import { VerifyUser } from './src/application/use-cases/VerifyUser';
@@ -20,6 +21,7 @@ import { DeletePostController } from './src/presentation/controllers/DeletePostC
 import { GetPostController } from './src/presentation/controllers/GetPostController';
 import { GetPostsByUserController } from './src/presentation/controllers/GetPostsByUserController';
 import { GetPostsByUsernameController } from './src/presentation/controllers/GetPostsByUsernameController';
+import { GetReportedPostsController } from './src/presentation/controllers/GetReportedPostsController';
 import { SavePostReportController } from './src/presentation/controllers/SavePostReportController';
 import { UpdatePostController } from './src/presentation/controllers/UpdatePostController';
 import { VerifyUserController } from './src/presentation/controllers/VerifyUserController';
@@ -47,6 +49,7 @@ export async function main(): Promise<void> {
   const getPostsByUser = new GetPostsByUser(userRepo, postRepo);
   const getPostsByUsername = new GetPostsByUsername(userRepo, postRepo);
   const savePostReport = new SavePostReport(postReportRepo, postRepo, userRepo);
+  const getReportedPosts = new GetReportedPosts(postReportRepo);
 
   const createNewPostController = new CreateNewPostController(createNewPost);
   const verifyUserController = new VerifyUserController(verifyUser);
@@ -58,6 +61,9 @@ export async function main(): Promise<void> {
     getPostsByUsername,
   );
   const savePostReportController = new SavePostReportController(savePostReport);
+  const getReportedPostsController = new GetReportedPostsController(
+    getReportedPosts,
+  );
 
   run();
 
@@ -70,6 +76,7 @@ export async function main(): Promise<void> {
     getPostsByUserController,
     getPostsByUsernameController,
     savePostReportController,
+    getReportedPostsController,
   });
 }
 

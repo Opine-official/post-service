@@ -3,7 +3,10 @@ import cors from 'cors';
 import { VerifyUserController } from '../presentation/controllers/VerifyUserController';
 import cookieParser from 'cookie-parser';
 import { CreateNewPostController } from '../presentation/controllers/CreateNewPostController';
-import { authenticateToken } from '@opine-official/authentication';
+import {
+  authenticateToken,
+  authenticateAdmin,
+} from '@opine-official/authentication';
 import { GetPostController } from '../presentation/controllers/GetPostController';
 import { UpdatePostController } from '../presentation/controllers/UpdatePostController';
 import { DeletePostController } from '../presentation/controllers/DeletePostController';
@@ -11,6 +14,7 @@ import { GetPostsByUserController } from '../presentation/controllers/GetPostsBy
 import { GetPostsByUsernameController } from '../presentation/controllers/GetPostsByUsernameController';
 import helmet from 'helmet';
 import { SavePostReportController } from '../presentation/controllers/SavePostReportController';
+import { GetReportedPostsController } from '../presentation/controllers/GetReportedPostsController';
 interface ServerControllers {
   verifyUserController: VerifyUserController;
   createNewPostController: CreateNewPostController;
@@ -20,6 +24,7 @@ interface ServerControllers {
   getPostsByUserController: GetPostsByUserController;
   getPostsByUsernameController: GetPostsByUsernameController;
   savePostReportController: SavePostReportController;
+  getReportedPostsController: GetReportedPostsController;
 }
 
 const corsOptions = {
@@ -53,6 +58,10 @@ export class Server {
 
     app.post('/report', (req, res) => {
       controllers.savePostReportController.handle(req, res);
+    });
+
+    app.get('/reports', authenticateAdmin, (req, res) => {
+      controllers.getReportedPostsController.handle(req, res);
     });
 
     app
