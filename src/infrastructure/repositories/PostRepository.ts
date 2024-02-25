@@ -5,7 +5,6 @@ import IFullPost from '../../shared/interfaces/IFullPost';
 import { IPostUpdatePayload } from '../../shared/interfaces/IPostUpdatePayload';
 import { ICreatePostResult } from '../../shared/interfaces/ICreatePostResult';
 import { IUpdatePostResult } from '../../shared/interfaces/IUpdatePostResult';
-// import mongoose from 'mongoose';
 
 export class PostRepository implements IPostRepository {
   public async save(post: Post): Promise<Error | ICreatePostResult> {

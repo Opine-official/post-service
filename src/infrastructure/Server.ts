@@ -15,6 +15,7 @@ import { GetPostsByUsernameController } from '../presentation/controllers/GetPos
 import helmet from 'helmet';
 import { SavePostReportController } from '../presentation/controllers/SavePostReportController';
 import { GetReportedPostsController } from '../presentation/controllers/GetReportedPostsController';
+import { GetAllPostAnalyticsController } from '../presentation/controllers/GetAllPostAnalyticsController';
 interface ServerControllers {
   verifyUserController: VerifyUserController;
   createNewPostController: CreateNewPostController;
@@ -25,6 +26,7 @@ interface ServerControllers {
   getPostsByUsernameController: GetPostsByUsernameController;
   savePostReportController: SavePostReportController;
   getReportedPostsController: GetReportedPostsController;
+  getAllPostsAnalyticsController: GetAllPostAnalyticsController;
 }
 
 const corsOptions = {
@@ -84,6 +86,10 @@ export class Server {
 
     app.get('/getPostsByUsername', (req, res) => {
       controllers.getPostsByUsernameController.handle(req, res);
+    });
+
+    app.get('/analytics', authenticateAdmin, (req, res) => {
+      controllers.getAllPostsAnalyticsController.handle(req, res);
     });
 
     app.listen(port, () => {
