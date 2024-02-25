@@ -9,8 +9,8 @@ type PostAnalyticsParams = {
   shareCount?: number;
   commentCount?: number;
   bookmarkCount?: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export class PostAnalytics {

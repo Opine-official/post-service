@@ -23,6 +23,7 @@ export class PostRepository implements IPostRepository {
 
       await postDocument.save();
       return {
+        id: postDocument._id.toString(),
         postId: postDocument.postId,
         slug: postDocument.slug,
         createdAt: postDocument.createdAt,

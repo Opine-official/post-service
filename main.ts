@@ -41,7 +41,12 @@ export async function main(): Promise<void> {
   const messageAcknowledgement = new KafkaAcknowledgement();
 
   const verifyUser = new VerifyUser();
-  const createNewPost = new CreateNewPost(postRepo, userRepo, messageProducer);
+  const createNewPost = new CreateNewPost(
+    postRepo,
+    userRepo,
+    postAnalyticsRepo,
+    messageProducer,
+  );
   const getPost = new GetPost(postRepo);
   const updatePost = new UpdatePost(postRepo, messageProducer);
   const deletePost = new DeletePost(

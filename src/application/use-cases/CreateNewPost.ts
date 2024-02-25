@@ -1,6 +1,8 @@
 import { Content } from '../../domain/entities/Content';
 import { Post } from '../../domain/entities/Post';
+import { PostAnalytics } from '../../domain/entities/PostAnalytics';
 import { IMessageProducer } from '../../domain/interfaces/IMessageProducer';
+import { IPostAnalyticsRepository } from '../../domain/interfaces/IPostAnalyticsRepository';
 import { IPostRepository } from '../../domain/interfaces/IPostRepository';
 import { IUserRepository } from '../../domain/interfaces/IUserRepository';
 import IFeedPost from '../../shared/interfaces/IFeedPost';
@@ -28,6 +30,7 @@ export class CreateNewPost
   public constructor(
     private readonly _postRepo: IPostRepository,
     private readonly _userRepo: IUserRepository,
+    private readonly _postAnalyticsRepo: IPostAnalyticsRepository,
     private readonly _messageProducer: IMessageProducer,
   ) {}
 
@@ -54,6 +57,17 @@ export class CreateNewPost
 
     if (saveResult instanceof Error) {
       return saveResult;
+    }
+
+    const postAnalytics = new PostAnalytics({
+      postId: post.postId,
+      post: saveResult.id,
+    });
+
+    const analyticsResult = await this._postAnalyticsRepo.save(postAnalytics);
+
+    if (analyticsResult instanceof Error) {
+      return analyticsResult;
     }
 
     const feedPost: IFeedPost = {
