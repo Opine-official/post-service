@@ -16,6 +16,9 @@ import helmet from 'helmet';
 import { SavePostReportController } from '../presentation/controllers/SavePostReportController';
 import { GetReportedPostsController } from '../presentation/controllers/GetReportedPostsController';
 import { GetAllPostAnalyticsController } from '../presentation/controllers/GetAllPostAnalyticsController';
+import multer from 'multer';
+import { UploadPostImageController } from '../presentation/controllers/UploadPostImageController';
+
 interface ServerControllers {
   verifyUserController: VerifyUserController;
   createNewPostController: CreateNewPostController;
@@ -27,6 +30,7 @@ interface ServerControllers {
   savePostReportController: SavePostReportController;
   getReportedPostsController: GetReportedPostsController;
   getAllPostsAnalyticsController: GetAllPostAnalyticsController;
+  uploadPostImageController: UploadPostImageController;
 }
 
 const corsOptions = {
@@ -47,6 +51,8 @@ export class Server {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use(helmet());
+
+    const upload = multer();
 
     app.get('/test', (req, res) => res.send('Post service is running'));
 
@@ -91,6 +97,15 @@ export class Server {
     app.get('/analytics', authenticateAdmin, (req, res) => {
       controllers.getAllPostsAnalyticsController.handle(req, res);
     });
+
+    app.post(
+      '/uploadImage',
+      // authenticateToken,
+      upload.single('image'),
+      (req, res) => {
+        controllers.uploadPostImageController.handle(req, res);
+      },
+    );
 
     app.listen(port, () => {
       console.log(`Server is running in ${port}`);

@@ -7,6 +7,7 @@ import { GetPostsByUsername } from './src/application/use-cases/GetPostsByUserna
 import { GetReportedPosts } from './src/application/use-cases/GetReportedPosts';
 import { SavePostReport } from './src/application/use-cases/SavePostReport';
 import { UpdatePost } from './src/application/use-cases/UpdatePost';
+import { UploadPostImage } from './src/application/use-cases/UploadPostImage';
 import { VerifyUser } from './src/application/use-cases/VerifyUser';
 import { KafkaAcknowledgement } from './src/infrastructure/brokers/kafka/KafkaAcknowledgement';
 import { KafkaMessageProducer } from './src/infrastructure/brokers/kafka/KafkaMessageProducer';
@@ -16,6 +17,7 @@ import { PostAnalyticsRepository } from './src/infrastructure/repositories/PostA
 import { PostReportRepository } from './src/infrastructure/repositories/PostReportRepository';
 import { PostRepository } from './src/infrastructure/repositories/PostRepository';
 import { UserRepository } from './src/infrastructure/repositories/UserRepository';
+import { S3UploadService } from './src/infrastructure/s3/S3UploadService';
 import { Server } from './src/infrastructure/Server';
 import run from './src/presentation/consumers/PostConsumer';
 import { CreateNewPostController } from './src/presentation/controllers/CreateNewPostController';
@@ -27,6 +29,7 @@ import { GetPostsByUsernameController } from './src/presentation/controllers/Get
 import { GetReportedPostsController } from './src/presentation/controllers/GetReportedPostsController';
 import { SavePostReportController } from './src/presentation/controllers/SavePostReportController';
 import { UpdatePostController } from './src/presentation/controllers/UpdatePostController';
+import { UploadPostImageController } from './src/presentation/controllers/UploadPostImageController';
 import { VerifyUserController } from './src/presentation/controllers/VerifyUserController';
 
 export async function main(): Promise<void> {
@@ -39,6 +42,7 @@ export async function main(): Promise<void> {
   const messageProducer = new KafkaMessageProducer();
   const databaseSession = new MongooseDatabaseSession();
   const messageAcknowledgement = new KafkaAcknowledgement();
+  const s3UploadService = new S3UploadService();
 
   const verifyUser = new VerifyUser();
   const createNewPost = new CreateNewPost(
@@ -60,6 +64,7 @@ export async function main(): Promise<void> {
   const savePostReport = new SavePostReport(postReportRepo, postRepo, userRepo);
   const getReportedPosts = new GetReportedPosts(postReportRepo);
   const getAllPostsAnalytics = new GetAllPostAnalytics(postAnalyticsRepo);
+  const uploadPostImage = new UploadPostImage(s3UploadService);
 
   const createNewPostController = new CreateNewPostController(createNewPost);
   const verifyUserController = new VerifyUserController(verifyUser);
@@ -78,6 +83,10 @@ export async function main(): Promise<void> {
     getAllPostsAnalytics,
   );
 
+  const uploadPostImageController = new UploadPostImageController(
+    uploadPostImage,
+  );
+
   run();
 
   await Server.run(4002, {
@@ -91,6 +100,7 @@ export async function main(): Promise<void> {
     savePostReportController,
     getReportedPostsController,
     getAllPostsAnalyticsController,
+    uploadPostImageController,
   });
 }
 
