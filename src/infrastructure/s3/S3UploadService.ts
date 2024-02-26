@@ -47,4 +47,41 @@ export class S3UploadService {
 
     return new Error('Something went wrong while uploading');
   }
+
+  public async uploadPostVideo(
+    file: Express.Multer.File,
+  ): Promise<string | Error> {
+    if (!file || !file.buffer) {
+      return new Error('No file');
+    }
+
+    if (
+      !process.env.AWS_ACCESS_KEY_ID ||
+      !process.env.AWS_SECRET_ACCESS_KEY ||
+      !process.env.AWS_REGION
+    ) {
+      return new Error('Missing AWS credentials');
+    }
+
+    const params = {
+      Bucket: 'hackerconnect-images',
+      Key: `uploads/postVideos/${Date.now()}_${file.originalname}`,
+      Body: file.buffer,
+      ACL: 'public-read',
+    };
+
+    try {
+      const data = await s3.upload(params).promise();
+      if (!data.Location) {
+        throw new Error('No data location');
+      }
+      return data.Location;
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        return err;
+      }
+    }
+
+    return new Error('Something went wrong while uploading');
+  }
 }

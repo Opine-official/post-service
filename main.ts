@@ -8,6 +8,7 @@ import { GetReportedPosts } from './src/application/use-cases/GetReportedPosts';
 import { SavePostReport } from './src/application/use-cases/SavePostReport';
 import { UpdatePost } from './src/application/use-cases/UpdatePost';
 import { UploadPostImage } from './src/application/use-cases/UploadPostImage';
+import { UploadPostVideo } from './src/application/use-cases/UploadPostVideo';
 import { VerifyUser } from './src/application/use-cases/VerifyUser';
 import { KafkaAcknowledgement } from './src/infrastructure/brokers/kafka/KafkaAcknowledgement';
 import { KafkaMessageProducer } from './src/infrastructure/brokers/kafka/KafkaMessageProducer';
@@ -30,6 +31,7 @@ import { GetReportedPostsController } from './src/presentation/controllers/GetRe
 import { SavePostReportController } from './src/presentation/controllers/SavePostReportController';
 import { UpdatePostController } from './src/presentation/controllers/UpdatePostController';
 import { UploadPostImageController } from './src/presentation/controllers/UploadPostImageController';
+import { UploadPostVideoController } from './src/presentation/controllers/UploadPostVideoController';
 import { VerifyUserController } from './src/presentation/controllers/VerifyUserController';
 
 export async function main(): Promise<void> {
@@ -65,6 +67,7 @@ export async function main(): Promise<void> {
   const getReportedPosts = new GetReportedPosts(postReportRepo);
   const getAllPostsAnalytics = new GetAllPostAnalytics(postAnalyticsRepo);
   const uploadPostImage = new UploadPostImage(s3UploadService);
+  const uploadPostVideo = new UploadPostVideo(s3UploadService);
 
   const createNewPostController = new CreateNewPostController(createNewPost);
   const verifyUserController = new VerifyUserController(verifyUser);
@@ -86,6 +89,9 @@ export async function main(): Promise<void> {
   const uploadPostImageController = new UploadPostImageController(
     uploadPostImage,
   );
+  const uploadPostVideoController = new UploadPostVideoController(
+    uploadPostVideo,
+  );
 
   run();
 
@@ -101,6 +107,7 @@ export async function main(): Promise<void> {
     getReportedPostsController,
     getAllPostsAnalyticsController,
     uploadPostImageController,
+    uploadPostVideoController,
   });
 }
 

@@ -18,6 +18,7 @@ import { GetReportedPostsController } from '../presentation/controllers/GetRepor
 import { GetAllPostAnalyticsController } from '../presentation/controllers/GetAllPostAnalyticsController';
 import multer from 'multer';
 import { UploadPostImageController } from '../presentation/controllers/UploadPostImageController';
+import { UploadPostVideoController } from '../presentation/controllers/UploadPostVideoController';
 
 interface ServerControllers {
   verifyUserController: VerifyUserController;
@@ -31,6 +32,7 @@ interface ServerControllers {
   getReportedPostsController: GetReportedPostsController;
   getAllPostsAnalyticsController: GetAllPostAnalyticsController;
   uploadPostImageController: UploadPostImageController;
+  uploadPostVideoController: UploadPostVideoController;
 }
 
 const corsOptions = {
@@ -104,6 +106,15 @@ export class Server {
       upload.single('image'),
       (req, res) => {
         controllers.uploadPostImageController.handle(req, res);
+      },
+    );
+
+    app.post(
+      '/uploadVideo',
+      // authenticateToken,
+      upload.single('video'),
+      (req, res) => {
+        controllers.uploadPostVideoController.handle(req, res);
       },
     );
 
