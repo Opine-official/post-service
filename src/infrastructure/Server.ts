@@ -19,6 +19,7 @@ import { GetAllPostAnalyticsController } from '../presentation/controllers/GetAl
 import multer from 'multer';
 import { UploadPostImageController } from '../presentation/controllers/UploadPostImageController';
 import { UploadPostVideoController } from '../presentation/controllers/UploadPostVideoController';
+import { GenerateOpenAiCompletionsController } from '../presentation/controllers/GenerateOpenAiCompletionsController';
 
 interface ServerControllers {
   verifyUserController: VerifyUserController;
@@ -33,6 +34,7 @@ interface ServerControllers {
   getAllPostsAnalyticsController: GetAllPostAnalyticsController;
   uploadPostImageController: UploadPostImageController;
   uploadPostVideoController: UploadPostVideoController;
+  generateOpenaiCompletionsController: GenerateOpenAiCompletionsController;
 }
 
 const corsOptions = {
@@ -87,6 +89,10 @@ export class Server {
       .delete('/', authenticateToken, (req, res) => {
         controllers.deletePostController.handle(req, res);
       });
+
+    app.post('/generateOpenaiCompletions', (req, res) => {
+      controllers.generateOpenaiCompletionsController.handle(req, res);
+    });
 
     app.get('/getPostsByUser', authenticateToken, (req, res) => {
       controllers.getPostsByUserController.handle(req, res);

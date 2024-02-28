@@ -1,5 +1,6 @@
 import { CreateNewPost } from './src/application/use-cases/CreateNewPost';
 import { DeletePost } from './src/application/use-cases/DeletePost';
+import { GenerateOpenaiCompletions } from './src/application/use-cases/GenerateOpenaiCompletions';
 import { GetAllPostAnalytics } from './src/application/use-cases/GetAllPostAnalytics';
 import { GetPost } from './src/application/use-cases/GetPost';
 import { GetPostsByUser } from './src/application/use-cases/GetPostsByUser';
@@ -14,6 +15,7 @@ import { KafkaAcknowledgement } from './src/infrastructure/brokers/kafka/KafkaAc
 import { KafkaMessageProducer } from './src/infrastructure/brokers/kafka/KafkaMessageProducer';
 import { DatabaseConnection } from './src/infrastructure/database/Connection';
 import { MongooseDatabaseSession } from './src/infrastructure/database/MongooseDatabaseSession';
+import { OpenAiCompletions } from './src/infrastructure/openai/Completions';
 import { PostAnalyticsRepository } from './src/infrastructure/repositories/PostAnalyticsRepository';
 import { PostReportRepository } from './src/infrastructure/repositories/PostReportRepository';
 import { PostRepository } from './src/infrastructure/repositories/PostRepository';
@@ -23,6 +25,7 @@ import { Server } from './src/infrastructure/Server';
 import run from './src/presentation/consumers/PostConsumer';
 import { CreateNewPostController } from './src/presentation/controllers/CreateNewPostController';
 import { DeletePostController } from './src/presentation/controllers/DeletePostController';
+import { GenerateOpenAiCompletionsController } from './src/presentation/controllers/GenerateOpenAiCompletionsController';
 import { GetAllPostAnalyticsController } from './src/presentation/controllers/GetAllPostAnalyticsController';
 import { GetPostController } from './src/presentation/controllers/GetPostController';
 import { GetPostsByUserController } from './src/presentation/controllers/GetPostsByUserController';
@@ -61,6 +64,8 @@ export async function main(): Promise<void> {
     databaseSession,
     messageAcknowledgement,
   );
+  const openAiComp = new OpenAiCompletions();
+
   const getPostsByUser = new GetPostsByUser(userRepo, postRepo);
   const getPostsByUsername = new GetPostsByUsername(userRepo, postRepo);
   const savePostReport = new SavePostReport(postReportRepo, postRepo, userRepo);
@@ -68,6 +73,7 @@ export async function main(): Promise<void> {
   const getAllPostsAnalytics = new GetAllPostAnalytics(postAnalyticsRepo);
   const uploadPostImage = new UploadPostImage(s3UploadService);
   const uploadPostVideo = new UploadPostVideo(s3UploadService);
+  const generateOpenaiCompletions = new GenerateOpenaiCompletions(openAiComp);
 
   const createNewPostController = new CreateNewPostController(createNewPost);
   const verifyUserController = new VerifyUserController(verifyUser);
@@ -93,6 +99,9 @@ export async function main(): Promise<void> {
     uploadPostVideo,
   );
 
+  const generateOpenaiCompletionsController =
+    new GenerateOpenAiCompletionsController(generateOpenaiCompletions);
+
   run();
 
   await Server.run(4002, {
@@ -108,6 +117,7 @@ export async function main(): Promise<void> {
     getAllPostsAnalyticsController,
     uploadPostImageController,
     uploadPostVideoController,
+    generateOpenaiCompletionsController,
   });
 }
 
