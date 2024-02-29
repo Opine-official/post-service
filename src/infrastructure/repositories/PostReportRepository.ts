@@ -1,5 +1,8 @@
 import { PostReportModel } from '../models/PostReportModel';
-import { IPostReportRepository } from '../../domain/interfaces/IPostReportRepository';
+import {
+  IPostReportRepository,
+  ReportedPost,
+} from '../../domain/interfaces/IPostReportRepository';
 import { PostReport } from '../../domain/entities/PostReport';
 
 export class PostReportRepository implements IPostReportRepository {
@@ -68,25 +71,29 @@ export class PostReportRepository implements IPostReportRepository {
     }
   }
 
-  public async getReportedPosts(): Promise<PostReport[] | Error> {
+  public async getReportedPosts(): Promise<ReportedPost[] | Error> {
     try {
       const postReportDocuments = await PostReportModel.find()
-        .populate('reportedPost', 'title -_id')
+        .populate('reportedPost', 'title slug -_id')
         .populate('reporterUser', 'username -_id');
 
-      const result = postReportDocuments.map(
-        (postReportDocument) =>
-          new PostReport({
-            postReportId: postReportDocument.postReportId,
-            reportedPostId: postReportDocument.reportedPostId,
-            reporterUserId: postReportDocument.reporterUserId,
-            reportedPost: postReportDocument.reportedPost as unknown as string,
-            reporterUser: postReportDocument.reporterUser as unknown as string,
-            reason: postReportDocument.reason,
-            isOtherReason: postReportDocument.isOtherReason,
-            otherDetails: postReportDocument.otherDetails ?? '',
-          }),
-      );
+      const result = postReportDocuments
+        .map((postReportDocument) => ({
+          postReportId: postReportDocument.postReportId,
+          reportedPostId: postReportDocument.reportedPostId,
+          reporterUserId: postReportDocument.reporterUserId,
+          reportedPost: postReportDocument.reportedPost as unknown as {
+            title: string;
+            slug: string;
+          },
+          reporterUser: postReportDocument.reporterUser as unknown as {
+            username: string;
+          },
+          reason: postReportDocument.reason,
+          isOtherReason: postReportDocument.isOtherReason,
+          otherDetails: postReportDocument.otherDetails ?? '',
+        }))
+        .filter((postReport) => postReport.reportedPost !== null);
 
       return result;
     } catch (error: unknown) {

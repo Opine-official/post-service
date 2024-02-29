@@ -5,6 +5,13 @@ interface IGetReportedPostsResult {
   postReportId: string;
   reportedPostId: string;
   reporterUserId: string;
+  reportedPost: {
+    title: string;
+    slug: string;
+  };
+  reporterUser: {
+    username: string;
+  };
   reason: string;
   isOtherReason: boolean;
   otherDetails: string;
