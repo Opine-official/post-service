@@ -15,6 +15,10 @@ export class GenerateOpenaiCompletions
   ): Promise<string | Error> {
     const result = await this._completions.createCompletion(input.prompt);
 
+    if (result instanceof Error) {
+      return result;
+    }
+
     if (typeof result !== 'string') {
       return new Error(`${result} is not a string`);
     }
