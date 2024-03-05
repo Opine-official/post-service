@@ -21,4 +21,14 @@ export class UserRepository implements IUserRepository {
       return new Error('Something went wrong');
     }
   }
+
+  public async findMongoIdByUserId(userId: string): Promise<string | null> {
+    const userDocument = await UserModel.findOne({ userId });
+    return userDocument ? userDocument._id.toString() : null;
+  }
+
+  public async findMongoIdByUsername(username: string): Promise<string | null> {
+    const userDocument = await UserModel.findOne({ username });
+    return userDocument ? userDocument._id.toString() : null;
+  }
 }
