@@ -3,10 +3,7 @@ import cors from 'cors';
 import { VerifyUserController } from '../presentation/controllers/VerifyUserController';
 import cookieParser from 'cookie-parser';
 import { CreateNewPostController } from '../presentation/controllers/CreateNewPostController';
-import {
-  authenticateToken,
-  authenticateAdmin,
-} from '@opine-official/authentication';
+import { authenticateRole } from '@opine-official/authentication';
 import { GetPostController } from '../presentation/controllers/GetPostController';
 import { UpdatePostController } from '../presentation/controllers/UpdatePostController';
 import { DeletePostController } from '../presentation/controllers/DeletePostController';
@@ -78,7 +75,7 @@ export class Server {
       controllers.savePostReportController.handle(req, res);
     });
 
-    app.get('/reports', authenticateAdmin, (req, res) => {
+    app.get('/reports', authenticateRole('admin'), (req, res) => {
       controllers.getReportedPostsController.handle(req, res);
     });
 
@@ -86,21 +83,25 @@ export class Server {
       .get('/', (req, res) => {
         controllers.getPostController.handle(req, res);
       })
-      .post('/', authenticateToken, (req, res) => {
+      .post('/', authenticateRole('user'), (req, res) => {
         controllers.createNewPostController.handle(req, res);
       })
-      .put('/', authenticateToken, (req, res) => {
+      .put('/', authenticateRole('user'), (req, res) => {
         controllers.updatePostController.handle(req, res);
       })
-      .delete('/', authenticateToken, (req, res) => {
+      .delete('/', authenticateRole('user'), (req, res) => {
         controllers.deletePostController.handle(req, res);
       });
 
-    app.post('/generateOpenaiCompletions', (req, res) => {
-      controllers.generateOpenaiCompletionsController.handle(req, res);
-    });
+    app.post(
+      '/generateOpenaiCompletions',
+      authenticateRole('user'),
+      (req, res) => {
+        controllers.generateOpenaiCompletionsController.handle(req, res);
+      },
+    );
 
-    app.get('/getPostsByUser', authenticateToken, (req, res) => {
+    app.get('/getPostsByUser', authenticateRole('user'), (req, res) => {
       controllers.getPostsByUserController.handle(req, res);
     });
 
@@ -108,13 +109,13 @@ export class Server {
       controllers.getPostsByUsernameController.handle(req, res);
     });
 
-    app.get('/analytics', authenticateAdmin, (req, res) => {
+    app.get('/analytics', authenticateRole('admin'), (req, res) => {
       controllers.getAllPostsAnalyticsController.handle(req, res);
     });
 
     app.post(
       '/uploadImage',
-      // authenticateToken,
+      // authenticateRole('user'),
       upload.single('image'),
       (req, res) => {
         controllers.uploadPostImageController.handle(req, res);
@@ -123,7 +124,7 @@ export class Server {
 
     app.post(
       '/uploadVideo',
-      // authenticateToken,
+      // authenticateRole('user'),
       upload.single('video'),
       (req, res) => {
         controllers.uploadPostVideoController.handle(req, res);
