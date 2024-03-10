@@ -17,6 +17,7 @@ import multer from 'multer';
 import { UploadPostImageController } from '../presentation/controllers/UploadPostImageController';
 import { UploadPostVideoController } from '../presentation/controllers/UploadPostVideoController';
 import { GenerateOpenAiCompletionsController } from '../presentation/controllers/GenerateOpenAiCompletionsController';
+import { checkUserTokenVersion } from './middlewares/checkTokenVersion';
 
 interface ServerControllers {
   verifyUserController: VerifyUserController;
@@ -83,35 +84,56 @@ export class Server {
       .get('/', (req, res) => {
         controllers.getPostController.handle(req, res);
       })
-      .post('/', authenticateRole('user'), (req, res) => {
-        controllers.createNewPostController.handle(req, res);
-      })
-      .put('/', authenticateRole('user'), (req, res) => {
+      .post(
+        '/',
+        authenticateRole('user'),
+        checkUserTokenVersion,
+        (req, res) => {
+          controllers.createNewPostController.handle(req, res);
+        },
+      )
+      .put('/', authenticateRole('user'), checkUserTokenVersion, (req, res) => {
         controllers.updatePostController.handle(req, res);
       })
-      .delete('/', authenticateRole('user'), (req, res) => {
-        controllers.deletePostController.handle(req, res);
-      });
+      .delete(
+        '/',
+        authenticateRole('user'),
+        checkUserTokenVersion,
+        (req, res) => {
+          controllers.deletePostController.handle(req, res);
+        },
+      );
 
     app.post(
       '/generateOpenaiCompletions',
       authenticateRole('user'),
+      checkUserTokenVersion,
       (req, res) => {
         controllers.generateOpenaiCompletionsController.handle(req, res);
       },
     );
 
-    app.get('/getPostsByUser', authenticateRole('user'), (req, res) => {
-      controllers.getPostsByUserController.handle(req, res);
-    });
+    app.get(
+      '/getPostsByUser',
+      authenticateRole('user'),
+      checkUserTokenVersion,
+      (req, res) => {
+        controllers.getPostsByUserController.handle(req, res);
+      },
+    );
 
     app.get('/getPostsByUsername', (req, res) => {
       controllers.getPostsByUsernameController.handle(req, res);
     });
 
-    app.get('/analytics', authenticateRole('admin'), (req, res) => {
-      controllers.getAllPostsAnalyticsController.handle(req, res);
-    });
+    app.get(
+      '/analytics',
+      authenticateRole('admin'),
+      checkUserTokenVersion,
+      (req, res) => {
+        controllers.getAllPostsAnalyticsController.handle(req, res);
+      },
+    );
 
     app.post(
       '/uploadImage',
