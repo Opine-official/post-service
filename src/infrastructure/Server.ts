@@ -39,6 +39,7 @@ const allowedOrigins = [
   'https://localhost:3000',
   'https://www.opine.ink',
   'https://opine.ink',
+  'https://7zxqc7l6j8.execute-api.us-east-1.amazonaws.com',
 ];
 
 const corsOptions = {
